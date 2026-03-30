@@ -1,0 +1,22 @@
+variable "instances" {
+  default = {
+    sky    = "t3.micro"
+    satya  = "t3.small"
+    mitali = "c7i-flex.large"
+  }
+
+}
+
+
+
+
+resource "aws_instance" "name" {
+ for_each      = var.instances
+  ami           = "ami-0f8faa29480e7e6de"
+  instance_type = each.value
+  key_name      = "my-key"
+  tags= {
+    Name = "name-${each.key}"
+  }
+  }
+
