@@ -1,0 +1,27 @@
+variable "instance_names" {
+  default = ["satya", "sky", "mitali"]
+}
+
+
+
+
+resource "aws_instance" "vm" {
+  for_each      = toset(var.instance_names)
+  ami           = "ami-0f8faa29480e7e6de"
+  instance_type = "t3.micro"
+  key_name      = "my-key"
+  user_data     = <<-EOF
+     #!/bin/bash 
+     sudo -i
+     yum install httpd -y 
+     systemctl start httpd 
+     systemctl enable httpd 
+     echo "Terraform Modules" > /var/www/html/index.html
+    EOF
+
+  tags = {
+    Name =  each.value
+  }
+
+
+}
